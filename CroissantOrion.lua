@@ -646,13 +646,152 @@ function OrionLib:MakeWindow(WindowConfig)
 	MakeDraggable(DragPoint, MainWindow)
 
 	AddConnection(CloseBtn.MouseButton1Up, function()
-		MainWindow.Visible = false
-		UIHidden = true
-		OrionLib:MakeNotification({
-			Name = "Interface Hidden",
-			Content = "Tap RightShift to reopen the interface",
-			Time = 5
-		})
+		-- Create a ScreenGui
+
+local screenGui = Instance.new("ScreenGui")
+
+screenGui.Name = "ImageButtonGui"
+
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+screenGui.ResetOnSpawn = false
+
+
+-- Create an ImageButton
+
+local imageButton = Instance.new("ImageButton")
+
+imageButton.Size = UDim2.new(0, 50, 0, 50) -- Set the size to 50x50
+
+imageButton.Position = UDim2.new(1, -60, 0.5, -25) -- Position it on the right side with a small offset
+
+imageButton.AnchorPoint = Vector2.new(0, 0.5) -- Adjust the anchor point to align properly
+
+imageButton.Image = "rbxassetid://18675291390" -- Set the image ID
+
+imageButton.BackgroundColor3 = Color3.new(250, 238, 105) -- Set the background color to black
+
+imageButton.BackgroundTransparency = 0 -- Make the background visible
+
+imageButton.BorderSizePixel = 0 -- Remove the border
+
+imageButton.Parent = screenGui
+
+imageButton.Visible = true
+
+
+
+-- Create a UICorner to add rounded corners to the ImageButton
+
+local uiCorner = Instance.new("UICorner")
+
+uiCorner.CornerRadius = UDim.new(0, 10) -- Set the corner radius (adjust as needed)
+
+uiCorner.Parent = imageButton
+
+
+
+-- Function to make the ImageButton draggable
+
+local dragging = false
+
+local dragInput
+
+local dragStart
+
+local startPos
+
+
+
+local function update(input)
+
+    local delta = input.Position - dragStart
+
+    imageButton.Position = UDim2.new(
+
+        startPos.X.Scale,
+
+        startPos.X.Offset + delta.X,
+
+        startPos.Y.Scale,
+
+        startPos.Y.Offset + delta.Y
+
+    )
+
+end
+
+
+
+imageButton.InputBegan:Connect(function(input)
+
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+
+        dragging = true
+
+        dragStart = input.Position
+
+        startPos = imageButton.Position
+
+        
+
+        input.Changed:Connect(function()
+
+            if input.UserInputState == Enum.UserInputState.End then
+
+                dragging = false
+
+            end
+
+        end)
+
+    end
+
+end)
+
+
+
+imageButton.InputChanged:Connect(function(input)
+
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+
+        dragInput = input
+
+    end
+
+end)
+
+
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+
+    if dragging and input == dragInput then
+
+        update(input)
+
+    end
+
+end)
+
+
+
+
+
+
+
+-- Function to handle button clicks
+
+imageButton.MouseButton1Click:Connect(function()
+
+    MainWindow.Visible = true
+
+
+
+
+
+    screenGui:Destroy()
+
+end)
 		WindowConfig.CloseCallback()
 	end)
 
