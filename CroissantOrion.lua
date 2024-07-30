@@ -646,6 +646,10 @@ function OrionLib:MakeWindow(WindowConfig)
 	MakeDraggable(DragPoint, MainWindow)
 
 	AddConnection(CloseBtn.MouseButton1Up, function()
+	
+	MainWindow.Visible = false
+	
+	UIHidden = true
 		-- Create a ScreenGui
 
 local screenGui = Instance.new("ScreenGui")
