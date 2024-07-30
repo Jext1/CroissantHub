@@ -650,6 +650,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	MainWindow.Visible = false
 	
 	UIHidden = true
+	
 		-- Create a ScreenGui
 
 local screenGui = Instance.new("ScreenGui")
